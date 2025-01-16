@@ -22,12 +22,7 @@ const LandingPage: React.FC = () => {
           }}
         >
           <Container maxWidth="sm">
-            <Typography
-              variant="h2"
-              align="center"
-              color="textPrimary"
-              gutterBottom
-            >
+            <Typography variant="h2" align="center" color="textPrimary" mb={2}>
               Welcome to User Profile Management
             </Typography>
             <Typography variant="h5" align="center" color="textSecondary">

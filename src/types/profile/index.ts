@@ -3,9 +3,9 @@ type Gender = "male" | "female";
 export type ProfileCardProps = {
   FirstName: string;
   LastName: string;
-  Height: number | string;
+  Height: number;
   Gender: Gender;
-  BirthDate: Date | string;
+  BirthDate: Date;
   Picture?: string;
   handleClose?: () => void;
 };
@@ -13,9 +13,9 @@ export type ProfileCardProps = {
 export type User = {
   FirstName: string;
   LastName: string;
-  Height: number | string;
+  Height: number;
   Gender: Gender;
-  BirthDate: Date | string;
+  BirthDate: Date;
 };
 
 export type Item = {

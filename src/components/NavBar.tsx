@@ -102,7 +102,6 @@ export default function NavBar(): React.ReactElement {
 
           setImage(response.data.body.image);
           setLoading(false);
-          // console.log(response.data.body.image);
         } catch (err) {
           console.error(err);
         }
@@ -113,7 +112,7 @@ export default function NavBar(): React.ReactElement {
     fetchUserDetails();
     console.log("start profile fetch");
     fetchProfile();
-  }, [auth.user?.profile.sub, auth.isAuthenticated, dispatch]);
+  }, [auth.user?.profile.sub, auth.isAuthenticated, dispatch, auth, navigate]);
 
   // profile: aud: "6inr10h5tu5l0pb64dvf5hgmom";
   // cognito: groups: ["admin"];

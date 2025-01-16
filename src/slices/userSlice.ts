@@ -2,12 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   user: {
-    FirstName: "firstName",
-    LastName: "lastName",
-    Gender: "male./female",
-    Height: "5.6",
-    BirthDate: "2021-10-10",
-    Picture: "",
+    FirstName: "",
+    LastName: "",
+    Gender: "",
+    Height: "",
+    BirthDate: "",
   },
 };
 
@@ -27,11 +26,11 @@ export const userSlice = createSlice({
     },
     removeUser: (state, action) => {
       state.users = {
-        FirstName: "firstName",
-        LastName: "lastName",
-        Gender: "male./female",
-        Height: "5.6",
-        BirthDate: "2021-10-10",
+        FirstName: "",
+        LastName: "",
+        Gender: "",
+        Height: "",
+        BirthDate: "",
       };
     },
   },

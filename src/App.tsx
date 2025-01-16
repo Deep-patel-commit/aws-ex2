@@ -5,7 +5,6 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import EditProfile from "./pages/EditProfile";
 import LandingPage from "./pages/LandingPage";
-import SignIn from "./pages/SignIn";
 
 const router = createBrowserRouter([
   {
@@ -23,15 +22,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: (
-              <EditProfile
-                FirstName=""
-                LastName=""
-                Gender="male"
-                Height=""
-                BirthDate=""
-              />
-            ),
+            element: <EditProfile />,
           },
         ],
       },
@@ -44,10 +35,6 @@ const router = createBrowserRouter([
             element: <AdminPage />,
           },
         ],
-      },
-      {
-        path: "*",
-        element: <SignIn />,
       },
     ],
   },

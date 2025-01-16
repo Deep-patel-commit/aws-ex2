@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { AuthContextProps, useAuth } from "react-oidc-context";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import profile from "../assets/profile.jpg";
 import { ProfileCardProps } from "../types/profile";
 
@@ -19,21 +19,20 @@ function ProfileCard(props: ProfileCardProps) {
     ? `data:image/png;base64,${props.Picture}`
     : profile;
   const auth: AuthContextProps = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  function handleEditButton() {
-    navigate("/editProfile", {
-      state: {
-        FirstName: props.FirstName,
-        LastName: props.LastName,
-        Height: props.Height,
-        Gender: props.Gender,
-        BirthDate: props.BirthDate,
-        // Picture: imageSource === profile ? "" : props.Picture,
-      },
-    });
-    if (props.handleClose) props.handleClose();
-  }
+  // function handleEditButton() {
+  //   navigate("/editProfile", {
+  //     state: {
+  //       FirstName: props.FirstName,
+  //       LastName: props.LastName,
+  //       Height: props.Height,
+  //       Gender: props.Gender,
+  //       BirthDate: props.BirthDate,
+  //     },
+  //   });
+  //   if (props.handleClose) props.handleClose();
+  // }
   console.log(auth);
 
   return (
@@ -71,8 +70,10 @@ function ProfileCard(props: ProfileCardProps) {
                 {props.FirstName} {props.LastName}
               </Typography>
               <Tooltip title="Edit" placement="right">
-                <IconButton onClick={handleEditButton}>
-                  <EditIcon fontSize="small" />
+                <IconButton>
+                  <Link to="/editProfile">
+                    <EditIcon fontSize="small" />
+                  </Link>
                 </IconButton>
               </Tooltip>
             </Box>
