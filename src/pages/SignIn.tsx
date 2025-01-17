@@ -1,0 +1,179 @@
+import { Checkbox, Container } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import MuiCard from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { ChangeEvent, useState } from "react";
+import { SignInProp } from "../types/profile";
+
+const Card = styled(MuiCard)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  padding: theme.spacing(4),
+  //   margin: "auto",
+  justifySelf: "center",
+  justifyItems: "center",
+  [theme.breakpoints.up("sm")]: {
+    maxWidth: "600px",
+  },
+  boxShadow:
+    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
+}));
+
+const SignIn = () => {
+  const [usernameError, setUsernameError] = useState<boolean>(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState<string>("");
+  const [passwordError, setPasswordError] = useState<boolean>(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>("");
+  const [formData, setFormData] = useState<SignInProp>({
+    userName: "",
+    passWord: "",
+  });
+
+  const closeError = (attribute: string) => {
+    switch (attribute) {
+      case "userName":
+        setUsernameError(false);
+        setUsernameErrorMessage("");
+        break;
+      case "passWord":
+        setPasswordError(false);
+        setPasswordErrorMessage("");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    closeError(e.target.name);
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const validateInputs = (formData: SignInProp) => {
+    let isValid = true;
+    if (!formData.userName) {
+      setUsernameError(true);
+      setUsernameErrorMessage("Please enter a valid username.");
+      isValid = false;
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    console.log(formData);
+    if (!formData.passWord || !passwordRegex.test(formData.passWord)) {
+      setPasswordError(true);
+      setPasswordErrorMessage(
+        "Password must be at least 8 characters long, contain at least one number and one special character."
+      );
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
+  const handleSubmit = () => {
+    if (!validateInputs(formData)) {
+      return;
+    } else {
+      axios
+        .post(`${import.meta.env.VITE_TEMP_API_URL}/login`, {
+          username: formData.userName,
+          password: formData.passWord,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  const [showPassword, setShowPassword] = useState(false);
+
+  return (
+    <Container sx={{ mt: 4 }}>
+      <Card variant="outlined">
+        <Typography variant="h4" sx={{ pb: 2 }}>
+          Sign in
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            gap: 2,
+          }}
+        >
+          <TextField
+            error={usernameError}
+            helperText={usernameErrorMessage}
+            id="userName"
+            name="userName"
+            placeholder="userName"
+            label="username"
+            required
+            //   fullWidth
+            // variant="outlined"
+            onChange={handleChange}
+            color={usernameError ? "error" : "primary"}
+          />
+          <TextField
+            error={passwordError}
+            helperText={passwordErrorMessage}
+            name="passWord"
+            placeholder="••••••"
+            type={showPassword ? "text" : "password"}
+            id="passWord"
+            label="Password"
+            value={formData.passWord}
+            required
+            onChange={handleChange}
+            color={passwordError ? "error" : "primary"}
+          />
+          <Box>
+            <Checkbox
+              checked={showPassword}
+              onChange={() => {
+                setShowPassword(() => {
+                  return !showPassword;
+                });
+              }}
+            />
+            Show password
+          </Box>
+          <Button onClick={handleSubmit} variant="contained">
+            Sign in
+          </Button>
+        </Box>
+        <Divider>or</Divider>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Typography sx={{ textAlign: "center" }}>
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/material-ui/getting-started/templates/sign-in/"
+              variant="body2"
+              sx={{ alignSelf: "center" }}
+            >
+              Sign up
+            </Link>
+          </Typography>
+        </Box>
+      </Card>
+    </Container>
+  );
+};
+
+export default SignIn;

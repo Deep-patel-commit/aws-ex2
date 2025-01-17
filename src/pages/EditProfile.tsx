@@ -94,7 +94,7 @@ const EditProfile: React.FC = () => {
     setPictureError(false);
     const file = e.target.files[0];
     console.log(file);
-    if (file.size > 10 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       setPictureError(true);
       setPictureErrorMessage("Image too large");
       return;

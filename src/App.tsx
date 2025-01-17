@@ -5,6 +5,7 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import EditProfile from "./pages/EditProfile";
 import LandingPage from "./pages/LandingPage";
+import SignUp from "./pages/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             element: <AdminPage />,
           },
         ],
+      },
+      {
+        path: "/test",
+        element: <SignUp />,
       },
     ],
   },

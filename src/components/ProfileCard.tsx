@@ -3,12 +3,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import HeightIcon from "@mui/icons-material/Height";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MaleIcon from "@mui/icons-material/Male";
-import { Button, Container } from "@mui/material";
+import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useEffect } from "react";
 import { AuthContextProps, useAuth } from "react-oidc-context";
 import { Link } from "react-router-dom";
 import profile from "../assets/profile.jpg";
@@ -33,11 +34,14 @@ function ProfileCard(props: ProfileCardProps) {
   //   });
   //   if (props.handleClose) props.handleClose();
   // }
-  console.log(auth);
+
+  useEffect(() => {
+    props.action.current.updatePosition();
+  }, []);
 
   return (
     <>
-      <Container sx={{ flexGrow: 1 }}>
+      <Box>
         <Grid
           container
           columns={{ xs: 1, sm: 4, md: 4, lg: 6 }}
@@ -109,7 +113,7 @@ function ProfileCard(props: ProfileCardProps) {
             </Box>
           </Grid>
         </Grid>
-      </Container>
+      </Box>
     </>
   );
 }

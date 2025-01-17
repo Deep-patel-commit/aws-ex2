@@ -9,7 +9,7 @@ import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AuthContextProps, useAuth } from "react-oidc-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,8 @@ export default function NavBar(): React.ReactElement {
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (window.location.pathname === "/editProfile") return;
+    // console.log("inside handleOpen", event.currentTarget);
+
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -40,6 +42,7 @@ export default function NavBar(): React.ReactElement {
     (state: { user: User }) => state.user
   );
   const [image, setImage] = useState<string | undefined>(undefined);
+  const popOverAction = useRef();
   // console.log(auth);
 
   useEffect(() => {
@@ -178,8 +181,9 @@ export default function NavBar(): React.ReactElement {
                   vertical: "top",
                   horizontal: "right",
                 }}
+                action={popOverAction}
               >
-                <Box>
+                <Box sx={{ p: 2 }}>
                   {loading ? (
                     <CircularProgress />
                   ) : (
@@ -191,8 +195,20 @@ export default function NavBar(): React.ReactElement {
                       BirthDate={userDetails.BirthDate}
                       Picture={image}
                       handleClose={handleClose}
+                      action={popOverAction}
                     />
                   )}
+                  {/* <Box
+                    sx={{
+                      minWidth: "200px",
+                      minHeight: "200px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box> */}
                 </Box>
               </Popover>
             </div>

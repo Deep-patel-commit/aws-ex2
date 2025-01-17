@@ -26,3 +26,15 @@ export type Item = {
   gender: { S: string };
   birthDate: { S: string };
 };
+
+export type SignInProp = {
+  userName: string;
+  passWord: string;
+};
+
+export type SignUpProp = {
+  userName: string;
+  emailAddress: string;
+  passWord: string;
+  confirmPassWord: string;
+};
