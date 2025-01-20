@@ -1,4 +1,4 @@
-import { Checkbox, Container } from "@mui/material";
+import { Checkbox, Container, LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -8,15 +8,17 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { ChangeEvent, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login, startAuth } from "../slices/authSlice";
 import { SignInProp } from "../types/profile";
-
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   width: "100%",
   padding: theme.spacing(4),
-  //   margin: "auto",
   justifySelf: "center",
   justifyItems: "center",
   [theme.breakpoints.up("sm")]: {
@@ -35,6 +37,11 @@ const SignIn = () => {
     userName: "",
     passWord: "",
   });
+  const [authError, setAuthError] = useState<boolean>(false);
+  const [authErrorMessage, setAuthErrorMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const closeError = (attribute: string) => {
     switch (attribute) {
@@ -52,6 +59,8 @@ const SignIn = () => {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAuthError(false);
+    setAuthErrorMessage("");
     closeError(e.target.name);
     setFormData({
       ...formData,
@@ -83,96 +92,134 @@ const SignIn = () => {
 
   const handleSubmit = () => {
     if (!validateInputs(formData)) {
+      console.log("Invalid input");
       return;
     } else {
+      setIsLoading(true);
+      dispatch(startAuth());
       axios
-        .post(`${import.meta.env.VITE_TEMP_API_URL}/login`, {
+        .post(`${import.meta.env.VITE_TEMP_API_URL}/auth/login`, {
           username: formData.userName,
           password: formData.passWord,
         })
         .then((res) => {
           console.log(res);
+          console.log(res.data);
+          if (res.data.statusCode === 200) {
+            navigate("/");
+            dispatch(
+              login({
+                sub: res.data.body.userId,
+                email_verified: true,
+                id_token: res.data.body.idToken,
+                access_token: res.data.body.accessToken,
+                refresh_token: res.data.body.refreshToken,
+                ...(res.data.body.group && { group: res.data.body.group }),
+              })
+            );
+            console.log(res.data);
+            Cookies.set("id_token", res.data.body.idToken);
+            Cookies.set("access_token", res.data.body.accessToken);
+            Cookies.set("refresh_token", res.data.body.refreshToken);
+          } else if (res.data.statusCode === 401) {
+            if (res.data.body.message === "User is not confirmed.") {
+              navigate("/confirm-email", {
+                state: { username: formData.userName },
+              });
+            }
+            setAuthError(true);
+            setAuthErrorMessage(res.data.body.message);
+          }
         })
         .catch((err) => {
           console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
   };
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Card variant="outlined">
-        <Typography variant="h4" sx={{ pb: 2 }}>
-          Sign in
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            gap: 2,
-          }}
-        >
-          <TextField
-            error={usernameError}
-            helperText={usernameErrorMessage}
-            id="userName"
-            name="userName"
-            placeholder="userName"
-            label="username"
-            required
-            //   fullWidth
-            // variant="outlined"
-            onChange={handleChange}
-            color={usernameError ? "error" : "primary"}
-          />
-          <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
-            name="passWord"
-            placeholder="••••••"
-            type={showPassword ? "text" : "password"}
-            id="passWord"
-            label="Password"
-            value={formData.passWord}
-            required
-            onChange={handleChange}
-            color={passwordError ? "error" : "primary"}
-          />
-          <Box>
-            <Checkbox
-              checked={showPassword}
-              onChange={() => {
-                setShowPassword(() => {
-                  return !showPassword;
-                });
-              }}
-            />
-            Show password
-          </Box>
-          <Button onClick={handleSubmit} variant="contained">
+    <>
+      {isLoading && <LinearProgress />}
+      <Container sx={{ mt: 4 }}>
+        <Card variant="outlined">
+          <Typography variant="h4" sx={{ pb: 2 }}>
             Sign in
-          </Button>
-        </Box>
-        <Divider>or</Divider>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Typography sx={{ textAlign: "center" }}>
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/material-ui/getting-started/templates/sign-in/"
-              variant="body2"
-              sx={{ alignSelf: "center" }}
-            >
-              Sign up
-            </Link>
           </Typography>
-        </Box>
-      </Card>
-    </Container>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              gap: 2,
+            }}
+          >
+            <TextField
+              error={usernameError}
+              helperText={usernameErrorMessage}
+              id="userName"
+              name="userName"
+              placeholder="userName"
+              label="username"
+              required
+              onChange={handleChange}
+              color={usernameError ? "error" : "primary"}
+            />
+            <TextField
+              error={passwordError}
+              helperText={passwordErrorMessage}
+              name="passWord"
+              placeholder="••••••"
+              type={showPassword ? "text" : "password"}
+              id="passWord"
+              label="Password"
+              value={formData.passWord}
+              required
+              onChange={handleChange}
+              color={passwordError ? "error" : "primary"}
+            />
+            <Box>
+              <Checkbox
+                checked={showPassword}
+                onChange={() => {
+                  setShowPassword(() => {
+                    return !showPassword;
+                  });
+                }}
+              />
+              Show password
+            </Box>
+            <Box>
+              <Typography variant="body2" color="error">
+                {authError ? authErrorMessage : ""}
+              </Typography>
+            </Box>
+            <Button onClick={handleSubmit} variant="contained">
+              Sign in
+            </Button>
+          </Box>
+          <Divider>or</Divider>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Typography sx={{ textAlign: "center" }}>
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/sign-up"
+                variant="body2"
+                sx={{ alignSelf: "center" }}
+              >
+                Sign up
+              </Link>
+            </Typography>
+          </Box>
+        </Card>
+      </Container>
+    </>
   );
 };
 

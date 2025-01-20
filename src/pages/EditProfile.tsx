@@ -1,5 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, Container, Paper, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  styled,
+  TextField,
+} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
@@ -8,24 +15,31 @@ import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
 import DOMPurify from "dompurify";
 import { ChangeEvent, useState } from "react";
-import { AuthContextProps, useAuth } from "react-oidc-context";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ProfileCardProps, User } from "../types/profile";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { setUser } from "../slices/userSlice";
+import { AuthState, ProfileCardProps, User } from "../types/profile";
+
+const StyledTextField = styled(TextField)(() => ({}));
+
+const StyledGrid = styled(Grid)(() => ({}));
+
+const StyledButton = styled(Button)(() => ({}));
 
 const EditProfile: React.FC = () => {
-  const auth: AuthContextProps = useAuth();
+  const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { state } = useLocation();
   const userDetails: ProfileCardProps = useSelector(
     (state: { user: User }) => state.user
   );
-  // console.log(userDetails);
+
   const [formData, setFormData] = useState<ProfileCardProps>({
     FirstName: userDetails.FirstName || state?.FirstName || "",
     LastName: state?.LastName || userDetails.LastName || "",
-    Height: state?.Height || userDetails.Height || 51,
-    Gender: state?.Gender || userDetails.Gender || "Male",
+    Height: state?.Height || userDetails.Height || 0,
+    Gender: state?.Gender || userDetails.Gender,
     BirthDate: state?.BirthDate || userDetails.BirthDate || new Date(),
     Picture: state?.Picture || "",
   });
@@ -90,8 +104,13 @@ const EditProfile: React.FC = () => {
     });
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     setPictureError(false);
+    if (!e.target.files) {
+      setPictureError(true);
+      setPictureErrorMessage("No image selected");
+      return;
+    }
     const file = e.target.files[0];
     console.log(file);
     if (file.size > 10 * 1024 * 1024) {
@@ -201,11 +220,11 @@ const EditProfile: React.FC = () => {
           height: formData.Height,
           gender: formData.Gender,
           birthDate: formData.BirthDate,
-          userId: auth.user?.profile.sub,
+          userId: auth.user?.sub,
         },
         {
           headers: {
-            userid: auth.user?.profile.sub,
+            userid: auth.user?.sub,
             identitytoken: auth.user?.id_token,
           },
         }
@@ -215,6 +234,7 @@ const EditProfile: React.FC = () => {
         setIsLoading(false);
         window.alert("Details Updated Successfully");
         setIsLoading(true);
+        dispatch(setUser(formData));
         if (formData.Picture != "") {
           axios
             .post(
@@ -224,7 +244,7 @@ const EditProfile: React.FC = () => {
               },
               {
                 headers: {
-                  userid: auth.user?.profile.sub,
+                  userid: auth.user?.sub,
                   identitytoken: auth.user?.id_token,
                 },
               }
@@ -233,6 +253,7 @@ const EditProfile: React.FC = () => {
               console.log(response);
               window.alert("Profile Picture Updated Successfully");
               setIsLoading(false);
+              dispatch(setUser(formData));
               navigate("/");
             });
         } else {
@@ -243,6 +264,9 @@ const EditProfile: React.FC = () => {
       .catch((err) => {
         console.error(err);
         window.alert("Profile Update Failed");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -252,8 +276,8 @@ const EditProfile: React.FC = () => {
       <Container>
         <Paper sx={{ p: 2, mt: 5, backgroundColor: "#E0F2FC" }} elevation={7}>
           <Box component="form">
-            <Grid container spacing={2}>
-              <Grid
+            <StyledGrid container spacing={2}>
+              <StyledGrid
                 size={{ xs: 12 }}
                 display="flex"
                 justifyContent="space-between"
@@ -271,20 +295,22 @@ const EditProfile: React.FC = () => {
                     onChange={handleImageUpload}
                   />
                   <label htmlFor="profile-picture">
-                    <Button variant="contained" component="span">
+                    <StyledButton variant="contained">
                       Upload Picture
-                    </Button>
+                    </StyledButton>
                   </label>
                   {pictureError && pictureErrorMessage}
                 </Box>
                 <Box>
-                  <IconButton onClick={() => navigate("/")}>
-                    <CloseIcon color="primary" />
-                  </IconButton>
+                  <Link to="/">
+                    <IconButton>
+                      <CloseIcon color="primary" />
+                    </IconButton>
+                  </Link>
                 </Box>
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              </StyledGrid>
+              <StyledGrid size={{ xs: 12, sm: 6 }}>
+                <StyledTextField
                   fullWidth
                   name="FirstName"
                   label="First Name"
@@ -294,10 +320,10 @@ const EditProfile: React.FC = () => {
                   helperText={firstNameErrorMessage}
                   color={firstNameError ? "error" : "primary"}
                 />
-              </Grid>
+              </StyledGrid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <StyledGrid size={{ xs: 12, sm: 6 }}>
+                <StyledTextField
                   fullWidth
                   name="LastName"
                   label="Last Name"
@@ -307,10 +333,10 @@ const EditProfile: React.FC = () => {
                   helperText={lastNameErrorMessage}
                   color={lastNameError ? "error" : "primary"}
                 />
-              </Grid>
+              </StyledGrid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <StyledGrid size={{ xs: 12, sm: 6 }}>
+                <StyledTextField
                   fullWidth
                   name="Height"
                   label="Height(cm)"
@@ -321,10 +347,10 @@ const EditProfile: React.FC = () => {
                   helperText={heightErrorMessage}
                   color={heightError ? "error" : "primary"}
                 />
-              </Grid>
+              </StyledGrid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <StyledGrid size={{ xs: 12, sm: 6 }}>
+                <StyledTextField
                   fullWidth
                   name="Gender"
                   label="Gender"
@@ -337,11 +363,11 @@ const EditProfile: React.FC = () => {
                 >
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
-                </TextField>
-              </Grid>
+                </StyledTextField>
+              </StyledGrid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
+              <StyledGrid size={{ xs: 12, sm: 6 }}>
+                <StyledTextField
                   fullWidth
                   type="date"
                   name="BirthDate"
@@ -354,14 +380,18 @@ const EditProfile: React.FC = () => {
                   helperText={birthDateErrorMessage}
                   color={birthDateError ? "error" : "primary"}
                 />
-              </Grid>
+              </StyledGrid>
 
-              <Grid size={{ xs: 12 }}>
-                <Button variant="contained" fullWidth onClick={handleSubmit}>
+              <StyledGrid size={{ xs: 12 }}>
+                <StyledButton
+                  variant="contained"
+                  fullWidth
+                  onClick={handleSubmit}
+                >
                   Update Profile
-                </Button>
-              </Grid>
-            </Grid>
+                </StyledButton>
+              </StyledGrid>
+            </StyledGrid>
           </Box>
         </Paper>
       </Container>

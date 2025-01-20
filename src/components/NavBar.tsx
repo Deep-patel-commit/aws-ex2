@@ -9,23 +9,21 @@ import Popover from "@mui/material/Popover";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
-import { AuthContextProps, useAuth } from "react-oidc-context";
+import Cookie from "js-cookie";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setUser } from "../slices/userSlice";
-import { ProfileCardProps, User } from "../types/profile";
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../slices/authSlice";
+import { removeUser, setUser } from "../slices/userSlice";
+import { AuthState, ProfileCardProps, User } from "../types/profile";
 import ProfileCard from "./ProfileCard";
-
 export default function NavBar(): React.ReactElement {
-  const auth: AuthContextProps = useAuth();
+  const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (window.location.pathname === "/editProfile") return;
-    // console.log("inside handleOpen", event.currentTarget);
-
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -42,8 +40,8 @@ export default function NavBar(): React.ReactElement {
     (state: { user: User }) => state.user
   );
   const [image, setImage] = useState<string | undefined>(undefined);
-  const popOverAction = useRef();
-  // console.log(auth);
+
+  console.log(auth);
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -56,12 +54,11 @@ export default function NavBar(): React.ReactElement {
           `${import.meta.env.VITE_API_URL}/v1/get/userDetails`,
           {
             headers: {
-              userid: auth.user?.profile.sub,
+              userid: auth.user?.sub,
               identityToken: auth.user?.id_token,
             },
           }
         );
-        console.log("inside fetchUserDetails", response.data);
         if (response.data.statusCode === 200) {
           if (response.data.body.Item === undefined) {
             navigate("/editProfile");
@@ -76,13 +73,26 @@ export default function NavBar(): React.ReactElement {
               BirthDate: response.data.body.Item.birthDate.S,
             };
             dispatch(setUser(userDetails));
-            // setLoading(false);
+            setLoading(false);
           }
         } else {
-          auth.signinRedirect();
+          dispatch(logout());
+          dispatch(removeUser());
+          navigate("/sign-in");
+          Cookie.remove("access_token");
+          Cookie.remove("refresh_token");
+          Cookie.remove("id_token");
         }
       } catch (err) {
         console.error(err);
+        if (err.response.status === 401) {
+          dispatch(logout());
+          dispatch(removeUser());
+          navigate("/sign-in");
+          Cookie.remove("access_token");
+          Cookie.remove("refresh_token");
+          Cookie.remove("id_token");
+        }
       }
     };
 
@@ -90,7 +100,7 @@ export default function NavBar(): React.ReactElement {
       if (auth.isAuthenticated) {
         try {
           setLoading(true);
-          const userId = auth.user?.profile.sub;
+          const userId = auth.user?.sub;
 
           const response = await axios.get(
             `${import.meta.env.VITE_API_URL}/v1/get/profilePicture`,
@@ -115,20 +125,7 @@ export default function NavBar(): React.ReactElement {
     fetchUserDetails();
     console.log("start profile fetch");
     fetchProfile();
-  }, [auth.user?.profile.sub, auth.isAuthenticated, dispatch, auth, navigate]);
-
-  // profile: aud: "6inr10h5tu5l0pb64dvf5hgmom";
-  // cognito: groups: ["admin"];
-  // cognito: username: "deep_patel";
-  // email: "deep.patel@infocusp.com";
-  // email_verified: true;
-  // event_id: "f20623da-6da1-46d0-97fe-576c987d79d9";
-  // exp: 1736505974;
-  // iat: 1736502374;
-  // iss: "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_OWDnYtm5j";
-  // origin_jti: "385cbceb-b023-4e5e-a353-33232670e33e";
-  // sub: "d1737d0a-a0f1-7016-7c5a-7c23993ae40d";
-  // token_use: "id";
+  }, [auth.user?.sub, auth.isAuthenticated, dispatch, auth, navigate]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -142,14 +139,14 @@ export default function NavBar(): React.ReactElement {
           <Tooltip title="Home">
             <IconButton
               size="large"
-              type="a"
               edge="start"
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
-              href="/"
             >
-              <PeopleIcon />
+              <Link to="/" style={{ color: "white" }}>
+                <PeopleIcon />
+              </Link>
             </IconButton>
           </Tooltip>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -181,7 +178,6 @@ export default function NavBar(): React.ReactElement {
                   vertical: "top",
                   horizontal: "right",
                 }}
-                action={popOverAction}
               >
                 <Box sx={{ p: 2 }}>
                   {loading ? (
@@ -195,20 +191,8 @@ export default function NavBar(): React.ReactElement {
                       BirthDate={userDetails.BirthDate}
                       Picture={image}
                       handleClose={handleClose}
-                      action={popOverAction}
                     />
                   )}
-                  {/* <Box
-                    sx={{
-                      minWidth: "200px",
-                      minHeight: "200px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CircularProgress />
-                  </Box> */}
                 </Box>
               </Popover>
             </div>
@@ -217,7 +201,7 @@ export default function NavBar(): React.ReactElement {
               <Button
                 color="inherit"
                 onClick={() => {
-                  auth.signinRedirect();
+                  navigate("/sign-in");
                 }}
               >
                 Login

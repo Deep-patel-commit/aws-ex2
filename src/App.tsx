@@ -3,15 +3,16 @@ import CheckAdmin from "./components/CheckAdmin";
 import CheckAuth from "./components/CheckAuth";
 import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import EditProfile from "./pages/EditProfile";
 import LandingPage from "./pages/LandingPage";
+import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
-    // errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -38,8 +39,16 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/test",
+        path: "/sign-up",
         element: <SignUp />,
+      },
+      {
+        path: "/sign-in",
+        element: <SignIn />,
+      },
+      {
+        path: "/confirm-email",
+        element: <ConfirmEmail />,
       },
     ],
   },

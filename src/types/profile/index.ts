@@ -38,3 +38,19 @@ export type SignUpProp = {
   passWord: string;
   confirmPassWord: string;
 };
+
+export type AuthData = {
+  sub: string;
+  email_verified: boolean;
+  id_token: string;
+  access_token: string;
+  refresh_token: string;
+  group?: string;
+};
+
+export type AuthState = {
+  isAuthenticated: boolean;
+  user: AuthData | null;
+  loading: boolean;
+  error?: string | null;
+};

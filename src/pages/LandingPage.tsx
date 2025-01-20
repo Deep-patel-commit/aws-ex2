@@ -63,13 +63,6 @@ const LandingPage: React.FC = () => {
           </Grid>
         </Container>
       </Box>
-      {/* <EditProfile
-        FirstName="John"
-        LastName="Doe"
-        Height="180"
-        Gender="male"
-        BirthDate={new Date()}
-      /> */}
     </>
   );
 };

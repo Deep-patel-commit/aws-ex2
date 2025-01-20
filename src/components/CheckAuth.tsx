@@ -1,14 +1,15 @@
-import { AuthContextProps, useAuth } from "react-oidc-context";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { AuthState } from "../types/profile";
 
 const CheckAuth = () => {
-  const auth: AuthContextProps = useAuth();
+  const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const navigate = useNavigate();
-  if (auth.isLoading) {
+  if (auth.loading) {
     navigate("/");
     return <></>;
   } else if (!auth.isAuthenticated) {
-    auth.signinRedirect();
+    navigate("/sign-in");
     return <></>;
   }
 

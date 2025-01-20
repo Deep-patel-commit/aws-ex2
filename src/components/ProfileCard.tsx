@@ -9,35 +9,21 @@ import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { useEffect } from "react";
-import { AuthContextProps, useAuth } from "react-oidc-context";
-import { Link } from "react-router-dom";
+import Cookie from "js-cookie";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import profile from "../assets/profile.jpg";
+import { logout } from "../slices/authSlice";
+import { removeUser } from "../slices/userSlice";
 import { ProfileCardProps } from "../types/profile";
 
 function ProfileCard(props: ProfileCardProps) {
   const imageSource = props.Picture
     ? `data:image/png;base64,${props.Picture}`
     : profile;
-  const auth: AuthContextProps = useAuth();
-  // const navigate = useNavigate();
 
-  // function handleEditButton() {
-  //   navigate("/editProfile", {
-  //     state: {
-  //       FirstName: props.FirstName,
-  //       LastName: props.LastName,
-  //       Height: props.Height,
-  //       Gender: props.Gender,
-  //       BirthDate: props.BirthDate,
-  //     },
-  //   });
-  //   if (props.handleClose) props.handleClose();
-  // }
-
-  useEffect(() => {
-    props.action.current.updatePosition();
-  }, []);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -74,11 +60,11 @@ function ProfileCard(props: ProfileCardProps) {
                 {props.FirstName} {props.LastName}
               </Typography>
               <Tooltip title="Edit" placement="right">
-                <IconButton>
-                  <Link to="/editProfile">
+                <Link to="/editProfile">
+                  <IconButton>
                     <EditIcon fontSize="small" />
-                  </Link>
-                </IconButton>
+                  </IconButton>
+                </Link>
               </Tooltip>
             </Box>
             <Box display="flex" alignItems="center" mb={1}>
@@ -103,7 +89,12 @@ function ProfileCard(props: ProfileCardProps) {
               <LogoutIcon />
               <Button
                 onClick={() => {
-                  auth.removeUser();
+                  dispatch(logout());
+                  dispatch(removeUser());
+                  navigate("/sign-in");
+                  Cookie.remove("access_token");
+                  Cookie.remove("refresh_token");
+                  Cookie.remove("id_token");
                 }}
               >
                 <Typography variant="body2" color="primary">

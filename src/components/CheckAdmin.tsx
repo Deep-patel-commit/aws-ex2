@@ -1,28 +1,26 @@
-import { AuthContextProps, useAuth } from "react-oidc-context";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { AuthState } from "../types/profile";
 
 const CheckAdmin = () => {
-  const auth: AuthContextProps = useAuth();
+  const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const navigate = useNavigate();
-  if (auth.isLoading) {
+  if (auth.loading) {
     navigate("/");
     return <></>;
-  } else if (!auth.isAuthenticated) {
-    auth.signinRedirect();
+  }
+  if (!auth.isAuthenticated) {
+    navigate("/sign-in");
     return <></>;
   }
 
-  const profile = auth.user?.profile;
-  const groups = profile?.["cognito:groups"] as string[];
+  const group = auth.user?.group;
 
-  if (groups && groups[0] === "admin") {
+  if (group && group === "admin") {
     return <Outlet />;
-  } else {
-    window.alert("hi");
-    console.log("after alert");
-    navigate("/");
-    return null;
   }
+  navigate("/");
+  return null;
 };
 
 export default CheckAdmin;

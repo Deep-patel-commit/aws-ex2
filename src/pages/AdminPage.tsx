@@ -7,20 +7,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { AuthContextProps, useAuth } from "react-oidc-context";
-import { Item } from "../types/profile";
-
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AuthState, Item } from "../types/profile";
 const AdminPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const auth: AuthContextProps = useAuth();
+  const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const [Items, setItems] = useState<Item[]>([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     setIsLoading(true);
     axios
       .get(`${import.meta.env.VITE_API_URL}/v1/admin/getProfiles`, {
         headers: {
-          userid: auth.user?.profile.sub,
+          userid: auth.user?.sub,
           identitytoken: auth.user?.id_token,
         },
       })
@@ -28,7 +28,7 @@ const AdminPage: React.FC = () => {
         if (res.data.statusCode == 400) {
           console.log("Unauthorized");
           window.alert("Unauthorized");
-          auth.signinRedirect();
+          navigate("/sign-in");
           return;
         } else if (res.data.statusCode == 500) {
           console.log("Internal Server Error");
@@ -39,6 +39,12 @@ const AdminPage: React.FC = () => {
           setItems(res.data.body.Items);
           setIsLoading(false);
         }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [auth]);
 
@@ -57,7 +63,6 @@ const AdminPage: React.FC = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {/* <TableCell>userid</TableCell> */}
                   <HeadCell>FName</HeadCell>
                   <HeadCell>LName</HeadCell>
                   <HeadCell>Gender</HeadCell>
@@ -68,7 +73,6 @@ const AdminPage: React.FC = () => {
               <TableBody>
                 {Items.map((item) => (
                   <TableRow key={item.userId.S} hover>
-                    {/* <TableCell>{item.userId.S}</TableCell> */}
                     <TableCell>{item.firstName.S}</TableCell>
                     <TableCell>{item.lastName.S}</TableCell>
                     <TableCell>{item.gender.S}</TableCell>

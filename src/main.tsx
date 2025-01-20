@@ -1,9 +1,10 @@
 import { createRoot } from "react-dom/client";
 import { AuthProvider, AuthProviderProps } from "react-oidc-context";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.tsx";
 import "./index.css";
-import { store } from "./store/store";
+import { persistor, store } from "./store/store";
 
 const cognitoAuthConfig: AuthProviderProps = {
   authority: import.meta.env.VITE_COGNITO_USER_POOL_AUTHORITY,
@@ -20,7 +21,10 @@ console.log(cognitoAuthConfig);
 createRoot(document.getElementById("root")!).render(
   <AuthProvider {...cognitoAuthConfig}>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
+    ,
   </AuthProvider>
 );
