@@ -1,4 +1,4 @@
-import { Box, LinearProgress, Paper, styled } from "@mui/material";
+import { Box, LinearProgress, Paper, styled, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,9 +9,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { FormTitle } from "../styledMui/Styled";
 import { AuthState, Item } from "../types/profile";
 const AdminPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const [Items, setItems] = useState<Item[]>([]);
   const navigate = useNavigate();
@@ -25,19 +28,24 @@ const AdminPage: React.FC = () => {
         },
       })
       .then((res) => {
-        if (res.data.statusCode == 400) {
-          console.log("Unauthorized");
-          window.alert("Unauthorized");
+        console.log(res);
+        if (res.data.statusCode == 401) {
+          setIsError(true);
+          setErrorMessage("Unauthorized");
           navigate("/sign-in");
           return;
         } else if (res.data.statusCode == 500) {
-          console.log("Internal Server Error");
-          window.alert("Internal Server Error");
+          setIsError(true);
+          setErrorMessage("Internal Server Error");
           return;
         } else if (res.data.statusCode == 200) {
           console.log("Success");
           setItems(res.data.body.Items);
           setIsLoading(false);
+        } else if (res.data.statusCode == 400) {
+          setIsError(true);
+          setErrorMessage(res.data.body?.message);
+          return;
         }
       })
       .catch((err) => {
@@ -59,6 +67,14 @@ const AdminPage: React.FC = () => {
         </Box>
       ) : (
         <Box m={1}>
+          {isError && (
+            <Box>
+              <Typography variant="h5" color="error">
+                {errorMessage}
+              </Typography>
+            </Box>
+          )}
+          <FormTitle>Users</FormTitle>
           <TableContainer component={Paper} elevation={5}>
             <Table stickyHeader>
               <TableHead>

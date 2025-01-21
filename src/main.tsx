@@ -1,5 +1,4 @@
 import { createRoot } from "react-dom/client";
-import { AuthProvider, AuthProviderProps } from "react-oidc-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App.tsx";
@@ -19,12 +18,9 @@ const cognitoAuthConfig: AuthProviderProps = {
 console.log(cognitoAuthConfig);
 
 createRoot(document.getElementById("root")!).render(
-  <AuthProvider {...cognitoAuthConfig}>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-    ,
-  </AuthProvider>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>
 );

@@ -5,6 +5,7 @@ import Layout from "./layout/Layout";
 import AdminPage from "./pages/AdminPage";
 import ConfirmEmail from "./pages/ConfirmEmail";
 import EditProfile from "./pages/EditProfile";
+import ErrorElement from "./pages/ErrorElement";
 import LandingPage from "./pages/LandingPage";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/confirm-email",
         element: <ConfirmEmail />,
+      },
+      {
+        path: "/error",
+        element: <ErrorElement />,
       },
     ],
   },

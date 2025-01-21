@@ -1,12 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Box,
-  Button,
-  Container,
-  Paper,
-  styled,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
@@ -20,11 +13,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setUser } from "../slices/userSlice";
 import { AuthState, ProfileCardProps, User } from "../types/profile";
 
-const StyledTextField = styled(TextField)(() => ({}));
-
-const StyledGrid = styled(Grid)(() => ({}));
-
-const StyledButton = styled(Button)(() => ({}));
+import { StyledPaper, StyledTextField } from "../styledMui/Styled";
 
 const EditProfile: React.FC = () => {
   const auth = useSelector((state: { auth: AuthState }) => state.auth);
@@ -274,10 +263,13 @@ const EditProfile: React.FC = () => {
     <>
       {isLoading && <LinearProgress />}
       <Container>
-        <Paper sx={{ p: 2, mt: 5, backgroundColor: "#E0F2FC" }} elevation={7}>
+        <StyledPaper
+          sx={{ p: 2, mt: 5, backgroundColor: "#E0F2FC" }}
+          elevation={7}
+        >
           <Box component="form">
-            <StyledGrid container spacing={2}>
-              <StyledGrid
+            <Grid container spacing={2}>
+              <Grid
                 size={{ xs: 12 }}
                 display="flex"
                 justifyContent="space-between"
@@ -295,9 +287,7 @@ const EditProfile: React.FC = () => {
                     onChange={handleImageUpload}
                   />
                   <label htmlFor="profile-picture">
-                    <StyledButton variant="contained">
-                      Upload Picture
-                    </StyledButton>
+                    <Button variant="contained">Upload Picture</Button>
                   </label>
                   {pictureError && pictureErrorMessage}
                 </Box>
@@ -308,8 +298,8 @@ const EditProfile: React.FC = () => {
                     </IconButton>
                   </Link>
                 </Box>
-              </StyledGrid>
-              <StyledGrid size={{ xs: 12, sm: 6 }}>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <StyledTextField
                   fullWidth
                   name="FirstName"
@@ -320,9 +310,9 @@ const EditProfile: React.FC = () => {
                   helperText={firstNameErrorMessage}
                   color={firstNameError ? "error" : "primary"}
                 />
-              </StyledGrid>
+              </Grid>
 
-              <StyledGrid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <StyledTextField
                   fullWidth
                   name="LastName"
@@ -333,9 +323,9 @@ const EditProfile: React.FC = () => {
                   helperText={lastNameErrorMessage}
                   color={lastNameError ? "error" : "primary"}
                 />
-              </StyledGrid>
+              </Grid>
 
-              <StyledGrid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <StyledTextField
                   fullWidth
                   name="Height"
@@ -347,9 +337,9 @@ const EditProfile: React.FC = () => {
                   helperText={heightErrorMessage}
                   color={heightError ? "error" : "primary"}
                 />
-              </StyledGrid>
+              </Grid>
 
-              <StyledGrid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <StyledTextField
                   fullWidth
                   name="Gender"
@@ -364,9 +354,9 @@ const EditProfile: React.FC = () => {
                   <MenuItem value="Male">Male</MenuItem>
                   <MenuItem value="Female">Female</MenuItem>
                 </StyledTextField>
-              </StyledGrid>
+              </Grid>
 
-              <StyledGrid size={{ xs: 12, sm: 6 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <StyledTextField
                   fullWidth
                   type="date"
@@ -380,20 +370,16 @@ const EditProfile: React.FC = () => {
                   helperText={birthDateErrorMessage}
                   color={birthDateError ? "error" : "primary"}
                 />
-              </StyledGrid>
+              </Grid>
 
-              <StyledGrid size={{ xs: 12 }}>
-                <StyledButton
-                  variant="contained"
-                  fullWidth
-                  onClick={handleSubmit}
-                >
+              <Grid size={{ xs: 12 }}>
+                <Button variant="contained" fullWidth onClick={handleSubmit}>
                   Update Profile
-                </StyledButton>
-              </StyledGrid>
-            </StyledGrid>
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
-        </Paper>
+        </StyledPaper>
       </Container>
     </>
   );

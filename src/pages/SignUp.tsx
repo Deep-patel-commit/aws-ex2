@@ -5,11 +5,15 @@ import MuiCard from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  ErrorTypography,
+  FormTitle,
+  StyledTextField,
+} from "../styledMui/Styled";
 import { SignUpProp } from "../types/profile";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -150,9 +154,7 @@ const SignUp = () => {
       {isLoading && <LinearProgress />}
       <Container sx={{ mt: 4 }}>
         <Card variant="outlined">
-          <Typography variant="h4" sx={{ pb: 2 }}>
-            Sign in
-          </Typography>
+          <FormTitle>Sign Up</FormTitle>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -164,7 +166,7 @@ const SignUp = () => {
               gap: 2,
             }}
           >
-            <TextField
+            <StyledTextField
               error={usernameError}
               helperText={usernameErrorMessage}
               id="userName"
@@ -176,7 +178,7 @@ const SignUp = () => {
               onChange={handleChange}
               color={usernameError ? "error" : "primary"}
             />
-            <TextField
+            <StyledTextField
               error={emailError}
               helperText={emailErrorMessage}
               id="emailAddress"
@@ -187,7 +189,7 @@ const SignUp = () => {
               onChange={handleChange}
               color={emailError ? "error" : "primary"}
             />
-            <TextField
+            <StyledTextField
               error={passwordError}
               helperText={passwordErrorMessage}
               name="passWord"
@@ -200,7 +202,7 @@ const SignUp = () => {
               onChange={handleChange}
               color={passwordError ? "error" : "primary"}
             />
-            <TextField
+            <StyledTextField
               error={confirmPassWordError}
               helperText={confirmPassWordErrorMessage}
               type={showPassword ? "text" : "password"}
@@ -225,11 +227,7 @@ const SignUp = () => {
               Show password
             </Box>
 
-            {authError && (
-              <Typography variant="body2" color="error">
-                {authErrorMessage}
-              </Typography>
-            )}
+            {authError && <ErrorTypography>{authErrorMessage}</ErrorTypography>}
 
             <Button onClick={handleSubmit} variant="contained">
               Sign Up

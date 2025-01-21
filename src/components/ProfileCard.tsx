@@ -15,8 +15,8 @@ import { Link, useNavigate } from "react-router-dom";
 import profile from "../assets/profile.jpg";
 import { logout } from "../slices/authSlice";
 import { removeUser } from "../slices/userSlice";
+import { ProfileBox, ProfileText } from "../styledMui/Styled";
 import { ProfileCardProps } from "../types/profile";
-
 function ProfileCard(props: ProfileCardProps) {
   const imageSource = props.Picture
     ? `data:image/png;base64,${props.Picture}`
@@ -55,7 +55,7 @@ function ProfileCard(props: ProfileCardProps) {
             </Grid>
           </Grid>
           <Grid key="details2">
-            <Box display="flex" alignItems="center" mb={1}>
+            <ProfileBox display="flex" alignItems="center" mb={1}>
               <Typography variant="h5" p={1} gutterBottom>
                 {props.FirstName} {props.LastName}
               </Typography>
@@ -66,26 +66,22 @@ function ProfileCard(props: ProfileCardProps) {
                   </IconButton>
                 </Link>
               </Tooltip>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
+            </ProfileBox>
+            <ProfileBox display="flex" alignItems="center" mb={1}>
               <HeightIcon />
-              <Typography variant="body1" color="textSecondary" ml={1}>
-                height : {props.Height}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
+              <ProfileText>height : {props.Height}</ProfileText>
+            </ProfileBox>
+            <ProfileBox display="flex" alignItems="center" mb={1}>
               <MaleIcon />
-              <Typography variant="body1" color="textSecondary" ml={1}>
-                Gender : {props.Gender}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
+              <ProfileText>Gender : {props.Gender}</ProfileText>
+            </ProfileBox>
+            <ProfileBox display="flex" alignItems="center" mb={1}>
               <CakeIcon />
-              <Typography variant="body1" color="textSecondary" ml={1}>
+              <ProfileText>
                 Birth Date : {new Date(props.BirthDate).toDateString()}
-              </Typography>
-            </Box>
-            <Box display="flex" alignItems="center" mb={1}>
+              </ProfileText>
+            </ProfileBox>
+            <ProfileBox display="flex" alignItems="center" mb={1}>
               <LogoutIcon />
               <Button
                 onClick={() => {
@@ -101,7 +97,7 @@ function ProfileCard(props: ProfileCardProps) {
                   Sign out
                 </Typography>
               </Button>
-            </Box>
+            </ProfileBox>
           </Grid>
         </Grid>
       </Box>

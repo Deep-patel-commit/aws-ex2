@@ -1,11 +1,9 @@
 import { Checkbox, Container, LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -13,6 +11,12 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login, startAuth } from "../slices/authSlice";
+import {
+  ErrorTypography,
+  FormTitle,
+  StyledButton,
+  StyledTextField,
+} from "../styledMui/Styled";
 import { SignInProp } from "../types/profile";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -146,9 +150,7 @@ const SignIn = () => {
       {isLoading && <LinearProgress />}
       <Container sx={{ mt: 4 }}>
         <Card variant="outlined">
-          <Typography variant="h4" sx={{ pb: 2 }}>
-            Sign in
-          </Typography>
+          <FormTitle>Sign In</FormTitle>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -160,7 +162,7 @@ const SignIn = () => {
               gap: 2,
             }}
           >
-            <TextField
+            <StyledTextField
               error={usernameError}
               helperText={usernameErrorMessage}
               id="userName"
@@ -171,7 +173,7 @@ const SignIn = () => {
               onChange={handleChange}
               color={usernameError ? "error" : "primary"}
             />
-            <TextField
+            <StyledTextField
               error={passwordError}
               helperText={passwordErrorMessage}
               name="passWord"
@@ -196,13 +198,13 @@ const SignIn = () => {
               Show password
             </Box>
             <Box>
-              <Typography variant="body2" color="error">
+              <ErrorTypography>
                 {authError ? authErrorMessage : ""}
-              </Typography>
+              </ErrorTypography>
             </Box>
-            <Button onClick={handleSubmit} variant="contained">
+            <StyledButton onClick={handleSubmit} variant="contained">
               Sign in
-            </Button>
+            </StyledButton>
           </Box>
           <Divider>or</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
