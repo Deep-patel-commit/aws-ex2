@@ -1,8 +1,13 @@
+import { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AuthState } from "../types/profile";
 
-const CheckAuth = () => {
+interface CheckAuthProps {
+  children?: ReactNode;
+}
+
+const CheckAuth = ({ children }: CheckAuthProps) => {
   const auth = useSelector((state: { auth: AuthState }) => state.auth);
   const navigate = useNavigate();
   if (auth.loading) {
@@ -13,7 +18,7 @@ const CheckAuth = () => {
     return <></>;
   }
 
-  return <>{auth.isAuthenticated ? <Outlet /> : <></>}</>;
+  return <>{auth.isAuthenticated ? children || <Outlet /> : <></>}</>;
 };
 
 export default CheckAuth;

@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import profile from "../assets/profile.jpg";
 import { logout } from "../slices/authSlice";
 import { removeUser } from "../slices/userSlice";
-import { ProfileBox, ProfileText } from "../styledMui/Styled";
+import { CardImage, ProfileBox, ProfileText } from "../styledMui/Styled";
 import { ProfileCardProps } from "../types/profile";
 function ProfileCard(props: ProfileCardProps) {
   const imageSource = props.Picture
@@ -39,7 +39,7 @@ function ProfileCard(props: ProfileCardProps) {
         >
           <Grid container key="details" size={{ xs: 1, sm: 2, md: 2, lg: 4 }}>
             <Grid key="profilepic" size={{ xs: 1, sm: 2, md: 2, lg: 2 }}>
-              <Box
+              <CardImage
                 component="img"
                 src={imageSource}
                 alt="profile pic"
@@ -55,7 +55,7 @@ function ProfileCard(props: ProfileCardProps) {
             </Grid>
           </Grid>
           <Grid key="details2">
-            <ProfileBox display="flex" alignItems="center" mb={1}>
+            <ProfileBox>
               <Typography variant="h5" p={1} gutterBottom>
                 {props.FirstName} {props.LastName}
               </Typography>
@@ -67,21 +67,21 @@ function ProfileCard(props: ProfileCardProps) {
                 </Link>
               </Tooltip>
             </ProfileBox>
-            <ProfileBox display="flex" alignItems="center" mb={1}>
+            <ProfileBox>
               <HeightIcon />
               <ProfileText>height : {props.Height}</ProfileText>
             </ProfileBox>
-            <ProfileBox display="flex" alignItems="center" mb={1}>
+            <ProfileBox>
               <MaleIcon />
               <ProfileText>Gender : {props.Gender}</ProfileText>
             </ProfileBox>
-            <ProfileBox display="flex" alignItems="center" mb={1}>
+            <ProfileBox>
               <CakeIcon />
               <ProfileText>
                 Birth Date : {new Date(props.BirthDate).toDateString()}
               </ProfileText>
             </ProfileBox>
-            <ProfileBox display="flex" alignItems="center" mb={1}>
+            <ProfileBox>
               <LogoutIcon />
               <Button
                 onClick={() => {

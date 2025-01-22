@@ -31,7 +31,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin123",
-        element: <CheckAdmin />,
+
+        element: (
+          <CheckAuth>
+            <CheckAdmin />
+          </CheckAuth>
+        ),
         children: [
           {
             index: true,

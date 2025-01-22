@@ -1,10 +1,11 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { styled } from "@mui/system";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../slices/authSlice";
 import { removeUser } from "../slices/userSlice";
+import { LandingTypography } from "../styledMui/Styled";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -27,10 +28,9 @@ const ErrorElement: React.FC = () => {
 
   return (
     <StyledBox>
-      <Typography variant="h4" color="error" gutterBottom>
+      <LandingTypography color="error">
         Oops! Something went wrong.
-      </Typography>
-
+      </LandingTypography>
       <Button variant="contained" color="primary" onClick={handleGoHome}>
         Go HOME
       </Button>

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { login, startAuth } from "../slices/authSlice";
 import {
   ErrorTypography,
+  FlexColumnBox,
   FormTitle,
   StyledButton,
   StyledTextField,
@@ -151,17 +152,7 @@ const SignIn = () => {
       <Container sx={{ mt: 4 }}>
         <Card variant="outlined">
           <FormTitle>Sign In</FormTitle>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: 2,
-            }}
-          >
+          <FlexColumnBox component="form" onSubmit={handleSubmit} noValidate>
             <StyledTextField
               error={usernameError}
               helperText={usernameErrorMessage}
@@ -205,7 +196,7 @@ const SignIn = () => {
             <StyledButton onClick={handleSubmit} variant="contained">
               Sign in
             </StyledButton>
-          </Box>
+          </FlexColumnBox>
           <Divider>or</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Typography sx={{ textAlign: "center" }}>

@@ -1,68 +1,61 @@
-import { Box, Button, Container, Paper, Typography } from "@mui/material";
-import React from "react";
-
+import { Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import BackgroundImage from "../assets/pxfuel.jpg";
+import React from "react";
+import {
+  LandingBackBox,
+  LandingPaper,
+  LandingSubTypography,
+  LandingTypography,
+  StyledButton,
+  StyledTypography,
+} from "../styledMui/Styled";
 
 const LandingPage: React.FC = () => {
   return (
     <>
-      <Box
-        sx={{
-          backgroundImage: `url(${BackgroundImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <Box
-          sx={{
-            pt: 8,
-            pb: 6,
-          }}
-        >
-          <Container maxWidth="sm">
-            <Typography variant="h2" align="center" color="textPrimary" mb={2}>
-              Welcome to User Profile Management
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary">
-              Manage your profile efficiently and securely with our
-              state-of-the-art user profile management system.
-            </Typography>
-            <Grid container spacing={2} justifyContent="center" p={2}>
-              <Grid>
-                <Button variant="contained" color="primary">
-                  Get Started
-                </Button>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-        <Container maxWidth="md">
-          <Grid container spacing={4}>
-            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-              <Paper elevation={7} sx={{ p: 2, backgroundColor: "#F6F0FC" }}>
-                <Typography variant="h6" gutterBottom>
-                  Profile Picture
-                </Typography>
-                <Typography>
-                  Upload Your Profile Picture your profile Pictures
-                </Typography>
-              </Paper>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
-              <Paper elevation={7} sx={{ p: 2, backgroundColor: "#F6F0FC" }}>
-                <Typography variant="h6" gutterBottom>
-                  Details
-                </Typography>
-                <Typography>
-                  Add Details like Name , Height , Gender , BirthDate
-                </Typography>
-              </Paper>
+      <LandingBackBox>
+        <Container maxWidth="sm">
+          <LandingTypography>
+            Welcome to User Profile Management
+          </LandingTypography>
+          <LandingSubTypography>
+            Manage your profile efficiently and securely with our
+            state-of-the-art user profile management system.
+          </LandingSubTypography>
+          <Grid container spacing={2} justifyContent="center" p={2}>
+            <Grid>
+              <StyledButton variant="contained" color="primary">
+                Get Started
+              </StyledButton>
             </Grid>
           </Grid>
         </Container>
-      </Box>
+
+        <Container maxWidth="md">
+          <Grid container spacing={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <LandingPaper elevation={7}>
+                <Typography variant="h6" gutterBottom>
+                  Profile Picture
+                </Typography>
+                <StyledTypography>
+                  Upload Your Profile Picture your profile Pictures
+                </StyledTypography>
+              </LandingPaper>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+              <LandingPaper elevation={7}>
+                <Typography variant="h6" gutterBottom>
+                  Details
+                </Typography>
+                <StyledTypography>
+                  Add Details like Name , Height , Gender , BirthDate
+                </StyledTypography>
+              </LandingPaper>
+            </Grid>
+          </Grid>
+        </Container>
+      </LandingBackBox>
     </>
   );
 };

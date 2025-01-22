@@ -1,4 +1,4 @@
-import { Container, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -7,7 +7,12 @@ import axios from "axios";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { SetStateAction, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ErrorTypography, FormTitle } from "../styledMui/Styled";
+import {
+  ErrorTypography,
+  FlexColumnBox,
+  FormTitle,
+  LandingGridContainer,
+} from "../styledMui/Styled";
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -93,30 +98,20 @@ const ConfirmEmail = () => {
   return (
     <>
       {isLoading && <LinearProgress />}
-      <Container sx={{ mt: 4 }}>
+      <LandingGridContainer>
         <Card variant="outlined">
           <FormTitle>Confirm Email</FormTitle>
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: 2,
-            }}
-          >
+          <FlexColumnBox component="form" onSubmit={handleSubmit}>
             <MuiOtpInput value={otp} onChange={handleChange} length={6} />
             {otpError && <ErrorTypography>{otpErrorMessage}</ErrorTypography>}
             {authError && <ErrorTypography>{authErrorMessage}</ErrorTypography>}
             <Button onClick={handleSubmit} variant="contained">
               Submit
             </Button>
-          </Box>
+          </FlexColumnBox>
         </Card>
-      </Container>
+      </LandingGridContainer>
     </>
   );
 };

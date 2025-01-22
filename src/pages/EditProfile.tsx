@@ -1,6 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, Container } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -13,7 +12,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setUser } from "../slices/userSlice";
 import { AuthState, ProfileCardProps, User } from "../types/profile";
 
-import { StyledPaper, StyledTextField } from "../styledMui/Styled";
+import {
+  EditProfileAvatar,
+  StyledPaper,
+  StyledTextField,
+} from "../styledMui/Styled";
 
 const EditProfile: React.FC = () => {
   const auth = useSelector((state: { auth: AuthState }) => state.auth);
@@ -263,10 +266,7 @@ const EditProfile: React.FC = () => {
     <>
       {isLoading && <LinearProgress />}
       <Container>
-        <StyledPaper
-          sx={{ p: 2, mt: 5, backgroundColor: "#E0F2FC" }}
-          elevation={7}
-        >
+        <StyledPaper elevation={7}>
           <Box component="form">
             <Grid container spacing={2}>
               <Grid
@@ -275,7 +275,7 @@ const EditProfile: React.FC = () => {
                 justifyContent="space-between"
               >
                 <Box position="relative">
-                  <Avatar
+                  <EditProfileAvatar
                     src={imagePreview}
                     sx={{ width: 100, height: 100, mb: 2 }}
                   />

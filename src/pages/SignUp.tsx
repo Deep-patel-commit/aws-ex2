@@ -11,6 +11,7 @@ import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ErrorTypography,
+  FlexColumnBox,
   FormTitle,
   StyledTextField,
 } from "../styledMui/Styled";
@@ -155,17 +156,7 @@ const SignUp = () => {
       <Container sx={{ mt: 4 }}>
         <Card variant="outlined">
           <FormTitle>Sign Up</FormTitle>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: 2,
-            }}
-          >
+          <FlexColumnBox component="form" onSubmit={handleSubmit} noValidate>
             <StyledTextField
               error={usernameError}
               helperText={usernameErrorMessage}
@@ -232,7 +223,7 @@ const SignUp = () => {
             <Button onClick={handleSubmit} variant="contained">
               Sign Up
             </Button>
-          </Box>
+          </FlexColumnBox>
 
           <Divider>or</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
